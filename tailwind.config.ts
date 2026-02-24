@@ -21,6 +21,8 @@ export default <Partial<Config>>{
         'tile-512': '#edc850',
         'tile-1024': '#edc53f',
         'tile-2048': '#edc22e',
+        'tile-4096': '#3c3a33',
+        'tile-8192': '#171710',
 
         // 文字色
         'text-dark': '#776e65', // 2, 4 など明るい背景用
