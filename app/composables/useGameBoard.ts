@@ -109,6 +109,8 @@ export const useGameBoard = () => {
       addRandomTile()
       checkGameOver()
     }
+
+    saveState()
   }
 
   const checkGameOver = () => {
@@ -124,6 +126,25 @@ export const useGameBoard = () => {
     isGameOver.value = true
   }
 
+  const saveState = () => {
+    localStorage.setItem('merge-state', JSON.stringify({
+      cells: cells.value,
+      score: score.value,
+      isGameOver: isGameOver.value,
+    }))
+  }
+
+  const loadState = (): boolean => {
+    const saved = localStorage.getItem('merge-state')
+    if (!saved) return false
+
+    const state = JSON.parse(saved)
+    cells.value = state.cells
+    score.value = state.score
+    isGameOver.value = state.isGameOver
+    return true
+  }
+
   const initGame = () => {
     cells.value = Array(CELL_COUNT).fill(0)
     cellKeys.value = Array.from({ length: CELL_COUNT }, (_, i) => i)
@@ -132,10 +153,13 @@ export const useGameBoard = () => {
     isGameOver.value = false
     addRandomTile()
     addRandomTile()
+    saveState()
   }
 
   if (import.meta.client) {
-    initGame()
+    if (!loadState()) {
+      initGame()
+    }
   }
 
   return {
