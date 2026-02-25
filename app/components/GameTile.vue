@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['flex items-center justify-center rounded-md font-bold', tileClass]"
+    :class="['flex items-center justify-center rounded-md font-bold', tileClass, value ? 'animate-pop' : '']"
   >
     {{ value || '' }}
   </div>

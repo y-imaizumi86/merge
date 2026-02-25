@@ -4,6 +4,8 @@ const CELL_COUNT = GRID_SIZE ** 2
 const cells = ref<number[]>(Array(CELL_COUNT).fill(0))
 const score = ref(0)
 const isGameOver = ref(false)
+const cellKeys = ref<number[]>(Array.from({ length: CELL_COUNT }, (_, i) => i))
+let keyCounter = CELL_COUNT
 
 export const useGameBoard = () => {
   const emptyCells = computed(() =>
@@ -18,6 +20,7 @@ export const useGameBoard = () => {
     const randomIndex = available[Math.floor(Math.random() * available.length)]
     if (randomIndex === undefined) return
     cells.value[randomIndex] = Math.random() < 0.9 ? 2 : 4
+    cellKeys.value[randomIndex] = ++keyCounter
   }
 
   const slideRow = (row: number[]): number[] => {
@@ -95,6 +98,13 @@ export const useGameBoard = () => {
       }
     }
 
+    const current: number[] = JSON.parse(prev)
+    for (let j = 0; j < CELL_COUNT; j++) {
+      if (cells.value[j] !== current[j] && cells.value[j] !== 0) {
+        cellKeys.value[j] = ++keyCounter
+      }
+    }
+
     if (JSON.stringify(cells.value) !== prev) {
       addRandomTile()
       checkGameOver()
@@ -116,6 +126,8 @@ export const useGameBoard = () => {
 
   const initGame = () => {
     cells.value = Array(CELL_COUNT).fill(0)
+    cellKeys.value = Array.from({ length: CELL_COUNT }, (_, i) => i)
+    keyCounter = CELL_COUNT
     score.value = 0
     isGameOver.value = false
     addRandomTile()
@@ -128,6 +140,7 @@ export const useGameBoard = () => {
 
   return {
     cells,
+    cellKeys,
     score,
     isGameOver,
     initGame,

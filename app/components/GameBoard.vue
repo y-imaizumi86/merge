@@ -2,7 +2,7 @@
   <div class="grid grid-cols-4 gap-2 rounded-lg bg-board p-2">
     <GameTile
       v-for="(cell, index) in cells"
-      :key="index"
+      :key="cellKeys[index]"
       :value="cell"
       class="aspect-square text-2xl"
     />
@@ -13,7 +13,7 @@
 import { onMounted, onUnmounted, ref as vueRef } from 'vue'
 import { useSwipe } from '@vueuse/core'
 
-const { cells, move } = useGameBoard()
+const { cells, cellKeys, move } = useGameBoard()
 
 const handleKeydown = (e: KeyboardEvent) => {
   const keyMap: Record<string, 'up' | 'down' | 'left' | 'right'> = {
