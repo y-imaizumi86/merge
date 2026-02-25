@@ -12,5 +12,8 @@ export default defineNuxtConfig({
     families: {
       Outfit: [400, 500, 700],
     },
+    display: 'swap',
+    preload: true,
+    download: true,
   },
 })
