@@ -1,11 +1,11 @@
 const GRID_SIZE = 4
 const CELL_COUNT = GRID_SIZE ** 2
 
-export const useGameBoard = () => {
-  const cells = ref<number[]>(Array(CELL_COUNT).fill(0))
-  const score = ref(0)
-  const isGameOver = ref(false)
+const cells = ref<number[]>(Array(CELL_COUNT).fill(0))
+const score = ref(0)
+const isGameOver = ref(false)
 
+export const useGameBoard = () => {
   const emptyCells = computed(() =>
     cells.value.map((value, index) => (value === 0 ? index : -1))
       .filter(value => value !== -1),
