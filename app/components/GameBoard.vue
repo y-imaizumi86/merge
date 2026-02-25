@@ -1,5 +1,9 @@
 <template>
-  <div class="grid grid-cols-4 gap-2 rounded-lg bg-board p-2">
+  <div
+    ref="boardRef"
+    class="grid grid-cols-4 gap-2 rounded-lg bg-board p-2"
+    @touchmove.prevent
+  >
     <GameTile
       v-for="(cell, index) in cells"
       :key="cellKeys[index]"
@@ -10,8 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref as vueRef } from 'vue'
-import { useSwipe } from '@vueuse/core'
+import { onMounted, onUnmounted } from 'vue'
 
 const { cells, cellKeys, move } = useGameBoard()
 
@@ -29,21 +32,6 @@ const handleKeydown = (e: KeyboardEvent) => {
     move(direction)
   }
 }
-
-const boardRef = vueRef<HTMLElement | null>(null)
-
-const { direction: swipeDirection } = useSwipe(boardRef, {
-  onSwipeEnd: () => {
-    const dirMap: Record<string, 'up' | 'down' | 'left' | 'right'> = {
-      up: 'up',
-      down: 'down',
-      left: 'left',
-      right: 'right',
-    }
-    const dir = dirMap[swipeDirection.value]
-    if (dir) move(dir)
-  },
-})
 
 onMounted(() => window.addEventListener('keydown', handleKeydown))
 onUnmounted(() => window.removeEventListener('keydown', handleKeydown))

@@ -1,5 +1,9 @@
 <template>
-  <div class="flex min-h-screen items-center justify-center bg-neutral-100">
+  <div
+    ref="appRef"
+    class="flex min-h-screen items-center justify-center bg-neutral-100"
+    @touchmove.prevent
+  >
     <div class="w-full max-w-md p-4">
       <ClientOnly>
         <GameHeader
@@ -34,5 +38,46 @@
 </template>
 
 <script setup lang="ts">
-const { score, isGameOver, initGame } = useGameBoard()
+import { ref as vueRef } from 'vue'
+
+const { score, isGameOver, initGame, move } = useGameBoard()
+
+const appRef = vueRef<HTMLElement | null>(null)
+
+const { direction: swipeDirection } = useSwipe(appRef, {
+  onSwipeEnd: () => {
+    const dirMap: Record<string, 'up' | 'down' | 'left' | 'right'> = {
+      up: 'up',
+      down: 'down',
+      left: 'left',
+      right: 'right',
+    }
+    const dir = dirMap[swipeDirection.value]
+    if (dir) move(dir)
+  },
+})
+
+useHead({
+  title: 'MERGE',
+  meta: [
+    {
+      name: 'description',
+      content: 'Vue 3 + Nuxt で作った2048パズルゲーム。キーボードとスワイプで操作できます。',
+    },
+    {
+      name: 'apple-mobile-web-app-title',
+      content: 'MERGE',
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+    },
+  ],
+  link: [
+    {
+      rel: 'apple-touch-icon',
+      href: '/icon-192x192.png',
+    },
+  ],
+})
 </script>
