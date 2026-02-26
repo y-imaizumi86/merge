@@ -6,6 +6,9 @@ const score = ref(0)
 const isGameOver = ref(false)
 const cellKeys = ref<number[]>(Array.from({ length: CELL_COUNT }, (_, i) => i))
 let keyCounter = CELL_COUNT
+const bestScore = ref(0)
+const hasWon = ref(false)
+const keepPlaying = ref(false)
 
 export const useGameBoard = () => {
   const emptyCells = computed(() =>
@@ -108,6 +111,9 @@ export const useGameBoard = () => {
     if (JSON.stringify(cells.value) !== prev) {
       addRandomTile()
       checkGameOver()
+      if (!hasWon.value && !keepPlaying.value && cells.value.includes(2048)) {
+        hasWon.value = true
+      }
     }
 
     saveState()
@@ -127,9 +133,13 @@ export const useGameBoard = () => {
   }
 
   const saveState = () => {
+    if (score.value > bestScore.value) {
+      bestScore.value = score.value
+    }
     localStorage.setItem('merge-state', JSON.stringify({
       cells: cells.value,
       score: score.value,
+      bestScore: bestScore.value,
       isGameOver: isGameOver.value,
     }))
   }
@@ -141,6 +151,7 @@ export const useGameBoard = () => {
     const state = JSON.parse(saved)
     cells.value = state.cells
     score.value = state.score
+    bestScore.value = state.bestScore ?? 0
     isGameOver.value = state.isGameOver
     return true
   }
@@ -150,10 +161,17 @@ export const useGameBoard = () => {
     cellKeys.value = Array.from({ length: CELL_COUNT }, (_, i) => i)
     keyCounter = CELL_COUNT
     score.value = 0
+    hasWon.value = false
+    keepPlaying.value = false
     isGameOver.value = false
     addRandomTile()
     addRandomTile()
     saveState()
+  }
+
+  const continueGame = () => {
+    keepPlaying.value = true
+    hasWon.value = false
   }
 
   if (import.meta.client) {
@@ -166,8 +184,11 @@ export const useGameBoard = () => {
     cells,
     cellKeys,
     score,
+    bestScore,
     isGameOver,
+    hasWon,
     initGame,
     move,
+    continueGame,
   }
 }

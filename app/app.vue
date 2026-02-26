@@ -1,20 +1,25 @@
 <template>
   <div
     ref="appRef"
-    class="flex min-h-screen items-center justify-center bg-neutral-100"
+    class="flex min-h-screen items-center justify-center bg-neutral-100 dark:bg-neutral-900"
     @touchmove.prevent
   >
     <div class="w-full max-w-md p-4">
       <ClientOnly>
         <GameHeader
           :score="score"
+          :best-score="bestScore"
           @restart="initGame"
+          @toggle-dark="toggleDark"
         />
         <div class="relative">
           <GameBoard />
           <GameOverlay
             :show="isGameOver"
+            :has-won="hasWon"
+            :score="score"
             @restart="initGame"
+            @continue="continueGame"
           />
         </div>
         <template #fallback>
@@ -40,7 +45,7 @@
 <script setup lang="ts">
 import { ref as vueRef } from 'vue'
 
-const { score, isGameOver, initGame, move } = useGameBoard()
+const { score, bestScore, isGameOver, hasWon, initGame, move, continueGame } = useGameBoard()
 
 const appRef = vueRef<HTMLElement | null>(null)
 
@@ -72,12 +77,37 @@ useHead({
       name: 'viewport',
       content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
     },
+    {
+      property: 'og:title',
+      content: 'MERGE - 2048 Puzzle Game',
+    },
+    {
+      property: 'og:description',
+      content: 'A modern 2048 puzzle game built with Vue 3 and Nuxt.',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
+    {
+      property: 'og:image',
+      content: '/ogp.png',
+    },
   ],
   link: [
     {
       rel: 'apple-touch-icon',
       href: '/icon-192x192.png',
     },
+    {
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico',
+    },
   ],
 })
+
+const toggleDark = () => {
+  document.documentElement.classList.toggle('dark')
+}
 </script>

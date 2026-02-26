@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 export default <Partial<Config>>{
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -21,8 +22,8 @@ export default <Partial<Config>>{
         'tile-512': '#edc850',
         'tile-1024': '#edc53f',
         'tile-2048': '#edc22e',
-        'tile-4096': '#3c3a33',
-        'tile-8192': '#171710',
+        'tile-4096': '#f44336',
+        'tile-8192': '#9c27b0',
 
         // 文字色
         'text-dark': '#776e65', // 2, 4 など明るい背景用
